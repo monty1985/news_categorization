@@ -1,0 +1,11 @@
+datasets>=2.14.0
+sentence-transformers>=2.2.2
+umap-learn>=0.5.3
+hdbscan>=0.8.29
+matplotlib>=3.7.1
+seaborn>=0.12.2
+scikit-learn>=1.2.2
+numpy>=1.24.3
+pandas>=2.0.2
+tqdm>=4.65.0
+plotly>=5.14.1 

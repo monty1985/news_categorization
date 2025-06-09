@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 from typing import List, Dict, Any
 import logging
 
-from config import VIZ_CONFIG, PATHS
+from config import CONFIG
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class ClusterVisualizer:
     def __init__(self):
         """Initialize the cluster visualizer."""
-        os.makedirs(PATHS['plots_dir'], exist_ok=True)
+        os.makedirs(CONFIG['paths']['plots_dir'], exist_ok=True)
         logger.info("Initialized ClusterVisualizer")
     
     def plot_umap_clusters(self, 
@@ -42,30 +42,30 @@ class ClusterVisualizer:
             filename_3d (str): Name of the file to save the 3D plot to
         """
         # Create 2D matplotlib plot if enabled
-        if VIZ_CONFIG['plot_2d']:
-            plt.figure(figsize=VIZ_CONFIG['figure_size'])
+        if CONFIG['visualization']['plot_2d']:
+            plt.figure(figsize=CONFIG['visualization']['figure_size'])
             scatter = sns.scatterplot(
                 x=umap_proj[:, 0],
                 y=umap_proj[:, 1],
                 hue=cluster_labels,
-                palette=VIZ_CONFIG['color_palette'],
-                s=VIZ_CONFIG['point_size']
+                palette=CONFIG['visualization']['color_palette'],
+                s=CONFIG['visualization']['point_size']
             )
             
-            plt.title(VIZ_CONFIG['plot_titles']['2d'])
+            plt.title(CONFIG['visualization']['plot_titles']['2d'])
             plt.xlabel("UMAP 1")
             plt.ylabel("UMAP 2")
             plt.legend(title='Cluster', loc='best')
             
             if save:
-                save_path = os.path.join(PATHS['plots_dir'], filename_2d)
+                save_path = os.path.join(CONFIG['paths']['plots_dir'], filename_2d)
                 plt.savefig(save_path, dpi=300, bbox_inches='tight')
                 logger.info(f"Saved 2D plot to {save_path}")
             
             plt.show()
         
         # Create interactive 3D plot if enabled and dimensions allow
-        if VIZ_CONFIG['plot_3d'] and umap_proj.shape[1] >= 3:
+        if CONFIG['visualization']['plot_3d'] and umap_proj.shape[1] >= 3:
             self.plot_3d_clusters(umap_proj, cluster_labels, texts, save, filename_3d)
     
     def plot_3d_clusters(self,
@@ -102,9 +102,9 @@ class ClusterVisualizer:
             z='UMAP3',
             color='Cluster',
             hover_data=['Text'],
-            title=VIZ_CONFIG['plot_titles']['3d'],
-            size_max=VIZ_CONFIG['marker_size'],
-            opacity=VIZ_CONFIG['opacity']
+            title=CONFIG['visualization']['plot_titles']['3d'],
+            size_max=CONFIG['visualization']['marker_size'],
+            opacity=CONFIG['visualization']['opacity']
         )
         
         # Update layout for better visualization
@@ -118,7 +118,7 @@ class ClusterVisualizer:
         )
         
         # Add cluster selection buttons
-        if VIZ_CONFIG['interactive']:
+        if CONFIG['visualization']['interactive']:
             buttons = []
             for cluster in sorted(df['Cluster'].unique()):
                 buttons.append(
@@ -144,7 +144,7 @@ class ClusterVisualizer:
             )
         
         if save:
-            save_path = os.path.join(PATHS['plots_dir'], filename)
+            save_path = os.path.join(CONFIG['paths']['plots_dir'], filename)
             fig.write_html(save_path)
             logger.info(f"Saved 3D plot to {save_path}")
         

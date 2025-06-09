@@ -1,95 +1,161 @@
-# News Article Clustering with UMAP and HDBSCAN
+# News Article Clustering
 
-This project performs unsupervised topic discovery on news articles using the AG News dataset. It uses sentence transformers to create embeddings, UMAP for dimensionality reduction, and HDBSCAN for clustering.
+A flexible and powerful text clustering system that can work with any text-based embeddings. This project implements various clustering algorithms to discover natural groupings in text data.
 
 ## Features
 
-- Text embedding using sentence-transformers
-- Dimensionality reduction with UMAP
-- Clustering with HDBSCAN
-- Interactive visualizations with Plotly
-- Cluster analysis and interpretation
-- Comprehensive logging and metrics
-
-## Project Structure
-
-```
-agnews-umap-hdbscan-clustering/
-│
-├── data/                    # Data storage
-├── embeddings/             # Embedding generation and storage
-├── clustering/             # UMAP and HDBSCAN implementation
-├── visualization/          # Plotting utilities
-├── config.py              # Configuration parameters
-├── main.py                # Main execution script
-└── requirements.txt       # Project dependencies
-```
+- **Flexible Embedding Support**: Works with any text-based embeddings (e.g., sentence transformers, word2vec, doc2vec)
+- **Multiple Clustering Algorithms**:
+  - HDBSCAN: Hierarchical density-based clustering
+  - K-means: Traditional centroid-based clustering
+  - DBSCAN: Density-based spatial clustering
+  - Hierarchical Clustering: Agglomerative clustering with various linkage methods
+- **Dimensionality Reduction**: UMAP for efficient visualization and clustering
+- **Interactive Visualizations**: 2D and 3D cluster visualizations
+- **Comprehensive Analysis**: Cluster metrics and example texts from each cluster
 
 ## Installation
 
-1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd agnews-umap-hdbscan-clustering
-```
+# Create and activate virtual environment
+conda create -n news_cluster_env python=3.12
+conda activate news_cluster_env
 
-2. Install dependencies:
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
 ## Usage
 
-Run the main script:
+### Basic Usage
+
 ```bash
+# Run with default HDBSCAN clustering
 python main.py
+
+# Run with K-means
+python main.py --algorithm kmeans --n-clusters 4
+
+# Run with DBSCAN
+python main.py --algorithm dbscan --eps 0.5 --min-samples 5
+
+# Run with Hierarchical Clustering
+python main.py --algorithm hierarchical --n-clusters 4
 ```
 
-This will:
-1. Load the AG News dataset
-2. Generate embeddings using sentence-transformers
-3. Perform dimensionality reduction with UMAP
-4. Cluster the data using HDBSCAN
-5. Generate visualizations
-6. Print cluster summaries
+### Command Line Arguments
+
+- `--algorithm`: Choose clustering algorithm
+  - Options: 'hdbscan', 'kmeans', 'dbscan', 'hierarchical'
+  - Default: 'hdbscan'
+
+- Algorithm-specific parameters:
+  - K-means:
+    - `--n-clusters`: Number of clusters (default: 4)
+  - DBSCAN:
+    - `--eps`: Maximum distance between samples (default: 0.5)
+    - `--min-samples`: Minimum samples in neighborhood (default: 5)
+  - HDBSCAN:
+    - `--min-cluster-size`: Minimum cluster size (default: 20)
+  - Hierarchical:
+    - `--n-clusters`: Number of clusters (default: 4)
 
 ## Configuration
 
-The project can be configured by modifying `config.py`:
+The project uses a flexible configuration system (`config.py`) that allows customization of:
 
-- Dataset parameters (name, split, text field)
-- Model parameters (embedding model, batch size)
-- UMAP parameters (neighbors, components, metric)
-- HDBSCAN parameters (min cluster size, min samples)
-- Visualization parameters (figure size, colors)
+1. **Data Source**:
+   - HuggingFace datasets
+   - Custom text files
+   - CSV/JSON files
+
+2. **Embedding Model**:
+   - Sentence Transformers
+   - Word2Vec
+   - Doc2Vec
+   - Custom embedding models
+
+3. **Clustering Parameters**:
+   - UMAP dimensionality reduction settings
+   - Algorithm-specific parameters
+   - Visualization options
+
+## Using Custom Embeddings
+
+The system can work with any text-based embeddings. To use custom embeddings:
+
+1. Prepare your embeddings as a numpy array
+2. Update the configuration in `config.py`:
+   ```python
+   CONFIG['model'] = {
+       'type': 'custom',
+       'embedding_dim': your_embedding_dimension
+   }
+   ```
+
+## Clustering Algorithms
+
+### HDBSCAN
+- Hierarchical version of DBSCAN
+- Discovers clusters of varying densities
+- No need to specify number of clusters
+- Good for complex data structures
+
+### K-means
+- Traditional centroid-based clustering
+- Requires specifying number of clusters
+- Works well with spherical clusters
+- Fast and scalable
+
+### DBSCAN
+- Density-based spatial clustering
+- Discovers clusters of arbitrary shapes
+- Can identify noise points
+- No need to specify number of clusters
+
+### Hierarchical Clustering
+- Creates a hierarchy of clusters
+- Can be visualized as a dendrogram
+- More computationally expensive
+- Good for understanding data structure
 
 ## Output
 
-The script generates:
-- Embeddings saved as numpy arrays
-- Static plots (PNG)
-- Interactive plots (HTML)
-- Cluster summaries in the console
-- Clustering metrics (number of clusters, noise points, silhouette score)
+The system provides:
 
-## Dependencies
+1. **Clustering Metrics**:
+   - Number of clusters
+   - Silhouette score
+   - Cluster sizes
+   - Noise points (if applicable)
 
-- datasets
-- sentence-transformers
-- umap-learn
-- hdbscan
-- matplotlib
-- seaborn
-- scikit-learn
-- numpy
-- pandas
-- plotly
-- tqdm
+2. **Visualizations**:
+   - 2D UMAP projection
+   - 3D interactive visualization
+   - Cluster distribution plots
 
-## License
+3. **Cluster Analysis**:
+   - Example texts from each cluster
+   - Cluster statistics
+   - Representative samples
 
-[Your chosen license]
+## Project Structure
+
+```
+news_categorization/
+├── config.py              # Configuration settings
+├── main.py               # Main execution script
+├── requirements.txt      # Project dependencies
+├── embeddings/           # Embedding generation
+├── clustering/           # Clustering algorithms
+├── visualization/        # Plotting utilities
+└── data/                 # Data storage
+```
 
 ## Contributing
 
-[Your contribution guidelines] 
+Feel free to submit issues and enhancement requests!
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details. 
